@@ -31,7 +31,11 @@ router.post('/register', (req: Request, res: Response, next: NextFunction) => {
 
     const success = store.registerUser(user);
     if (!success) {
-      res.status(400).json({ error: 'Username already exists' });
+      if (role === 'teacher') {
+        res.status(403).json({ error: 'Teacher registration is disabled. Contact administrator.' });
+      } else {
+        res.status(400).json({ error: 'Username already exists' });
+      }
       return;
     }
 

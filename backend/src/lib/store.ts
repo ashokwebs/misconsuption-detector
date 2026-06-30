@@ -1,12 +1,58 @@
 import { Submission, SessionStats, MisconceptionEntry, User } from '../types';
+import { v4 as uuidv4 } from 'uuid';
 
 // In-memory store — replace with a database for production persistence
 const submissions: Map<string, Submission[]> = new Map();
 const users: Map<string, User> = new Map();
 
+// --- SEED DATA ---
+const defaultTeacher: User = { id: 'teacher-1', username: 'teacher1', password: 'Teacher@123', role: 'teacher' };
+users.set(defaultTeacher.id, defaultTeacher);
+
+const dummyStudents: User[] = [
+  { id: 'student-1', username: 'alice', password: 'password', role: 'student' },
+  { id: 'student-2', username: 'bob', password: 'password', role: 'student' },
+];
+dummyStudents.forEach(s => users.set(s.id, s));
+
+const dummySubmissions: Submission[] = [
+  {
+    id: uuidv4(),
+    sessionId: 'session-1',
+    topic: 'Physics',
+    question: 'A heavy bowling ball and a light tennis ball are dropped from the same height in a vacuum. Which one hits the ground first and why?',
+    answer: 'The bowling ball hits first because heavier things fall faster due to gravity pulling them harder.',
+    diagnosis: { correct: false, severity: 'high', misconception_name: 'Heavier Objects Fall Faster', explanation: 'You thought the heavier ball falls faster.', correct_understanding: 'All objects fall at the same rate in a vacuum.', confidence: 90 },
+    timestamp: new Date().toISOString()
+  },
+  {
+    id: uuidv4(),
+    sessionId: 'session-2',
+    topic: 'Biology',
+    question: 'Why do giraffes have long necks? Explain how this trait evolved over time.',
+    answer: 'They stretched their necks to reach high leaves and passed those longer necks to their babies.',
+    diagnosis: { correct: false, severity: 'high', misconception_name: 'Lamarckian Inheritance', explanation: 'You thought stretching caused the trait to be inherited.', correct_understanding: 'Evolution happens through natural selection of existing traits.', confidence: 95 },
+    timestamp: new Date().toISOString()
+  },
+  {
+    id: uuidv4(),
+    sessionId: 'session-3',
+    topic: 'Physics',
+    question: 'A spaceship in deep space turns off its engines. Will it eventually slow down and stop? Explain your reasoning.',
+    answer: 'Yes, without the engines pushing it, it will eventually stop moving because force is needed for motion.',
+    diagnosis: { correct: false, severity: 'high', misconception_name: 'Impetus Theory', explanation: 'You believed force is required to maintain motion.', correct_understanding: 'An object in motion stays in motion unless acted upon by a force.', confidence: 85 },
+    timestamp: new Date().toISOString()
+  }
+];
+submissions.set('dummy', dummySubmissions);
+// -----------------
+
 export const store = {
   // --- Auth ---
   registerUser(user: User): boolean {
+    if (user.role === 'teacher') {
+      return false; // Prevent new teacher registration
+    }
     if (Array.from(users.values()).some((u) => u.username === user.username)) {
       return false; // username exists
     }
@@ -43,7 +89,8 @@ export const store = {
   },
 
   getSessionStats(sessionId: string): SessionStats {
-    const subs = this.getSubmissions(sessionId);
+    // For MVP, aggregate ALL submissions for the teacher view instead of by sessionId
+    const subs = this.getAllSubmissions();
 
     const total = subs.length;
     const coreMisconceptions = subs.filter(
