@@ -1,6 +1,6 @@
 # Misconception Detector
 
-![Misconception Detector Logo](/home/charizard/.gemini/antigravity/brain/5644a847-82f4-4726-9ae0-bb1b47f0ce84/misconception_logo_1782782498132.png)
+![Misconception Detector Logo](./frontend/public/logo.png)
 
 > AI-powered educational tool that diagnoses *why* students get things wrong — not just that they did.
 
