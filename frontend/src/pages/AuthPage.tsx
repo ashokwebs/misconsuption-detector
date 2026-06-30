@@ -42,6 +42,18 @@ export function AuthPage() {
           {isLogin ? 'Welcome Back' : 'Create Account'}
         </h2>
         
+        {/* Hackathon Admin Testing Credentials */}
+        <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl">
+          <p className="text-xs font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wider mb-1">
+            🧪 Hackathon Testing
+          </p>
+          <p className="text-sm text-blue-900 dark:text-blue-200">
+            To view the live dashboard, log in with the teacher account:<br/>
+            Username: <code className="bg-blue-100 dark:bg-blue-900/50 px-1 py-0.5 rounded">teacher1</code><br/>
+            Password: <code className="bg-blue-100 dark:bg-blue-900/50 px-1 py-0.5 rounded">Teacher@123</code>
+          </p>
+        </div>
+
         {error && (
           <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-sm rounded-lg text-center font-medium">
             {error}
