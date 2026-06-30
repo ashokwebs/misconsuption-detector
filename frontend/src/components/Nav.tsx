@@ -1,8 +1,7 @@
 import { useSession } from '@/lib/store';
-import { cn } from '@/lib/utils';
 
 export function Nav() {
-  const { role, setRole, sessionId } = useSession();
+  const { role, sessionId } = useSession();
 
   return (
     <header className="sticky top-0 z-20 bg-paper/80 backdrop-blur-md border-b border-paper-deep">
@@ -20,22 +19,17 @@ export function Nav() {
           </span>
         </div>
 
-        {/* Tab toggle */}
-        <div className="flex items-center gap-1 bg-paper-warm rounded-xl p-1 border border-paper-deep">
-          {(['student', 'teacher'] as const).map((r) => (
-            <button
-              key={r}
-              onClick={() => setRole(r)}
-              className={cn(
-                'px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 capitalize',
-                role === r
-                  ? 'bg-white text-ink shadow-sm border border-paper-deep'
-                  : 'text-ink-light hover:text-ink'
-              )}
-            >
-              {r === 'student' ? '✏️ Student' : '📊 Teacher'}
-            </button>
-          ))}
+        {/* User info */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300">
+            <span className="capitalize">{role === 'teacher' ? '📊 Teacher' : '✏️ Student'}</span>
+          </div>
+          <button
+            onClick={() => useSession.getState().setUser(null)}
+            className="text-xs font-semibold text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+          >
+            Log Out
+          </button>
         </div>
 
         {/* Session ID */}
