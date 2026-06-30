@@ -17,7 +17,7 @@ export function AuthPage() {
     const payload = isLogin ? { username, password } : { username, password, role };
 
     try {
-      const res = await fetch(`${(import.meta as any).env.VITE_API_URL}${endpoint}`, {
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
